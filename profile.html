@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile – TalkToTaste</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .profile-page { padding: 100px 40px 80px; max-width: 900px; margin: 0 auto; }
+    .profile-header { display: flex; align-items: center; gap: 24px; margin-bottom: 48px; }
+    .avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; }
+    .profile-info h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; }
+    .profile-info p { color: var(--text3); font-size: 0.9rem; }
+    .profile-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 32px; width: fit-content; }
+    .ptab { padding: 10px 24px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; color: var(--text3); transition: all 0.2s; }
+    .ptab.active { background: var(--surface); color: var(--primary); box-shadow: 0 1px 4px var(--shadow2); }
+    .pref-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .pref-label { font-weight: 600; color: var(--text); }
+    .pref-sub { font-size: 0.85rem; color: var(--text3); margin-top: 2px; }
+    .toggle { width: 48px; height: 26px; background: var(--border); border-radius: 100px; cursor: pointer; position: relative; transition: background 0.2s; border: none; }
+    .toggle.on { background: var(--primary); }
+    .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: white; transition: left 0.2s; }
+    .toggle.on::after { left: 25px; }
+    @media (max-width: 600px) { .profile-page { padding: 90px 20px 60px; } }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand"><div class="logo-icon">🍲</div> TalkToTaste</a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html">Recipes</a></li>
+  </ul>
+  <div class="navbar-actions">
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    <a href="login.html" class="btn btn-outline">Sign Out</a>
+  </div>
+</nav>
+
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="avatar">👩‍🍳</div>
+    <div class="profile-info">
+      <h2>My Profile</h2>
+      <p>Voice Kitchen Assistant · Member since 2024</p>
+    </div>
+  </div>
+
+  <div class="profile-tabs">
+    <div class="ptab active" onclick="showTab('favorites',this)">❤️ Favorites</div>
+    <div class="ptab" onclick="showTab('settings',this)">⚙️ Settings</div>
+    <div class="ptab" onclick="showTab('history',this)">📜 History</div>
+  </div>
+
+  <!-- Favorites -->
+  <div id="tab-favorites">
+    <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:20px;">Your Favorite Recipes</h3>
+    <div class="recipes-grid" id="favGrid">
+      <p style="color:var(--text3);grid-column:1/-1;">No favorites yet. Add some from the recipe pages!</p>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div id="tab-settings" style="display:none;">
+    <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:20px;">Preferences</h3>
+    <div class="pref-item">
+      <div><div class="pref-label">Dark Mode</div><div class="pref-sub">Switch to dark theme for cooking at night</div></div>
+      <button class="toggle" id="darkToggle" onclick="toggleDark(this)"></button>
+    </div>
+    <div class="pref-item">
+      <div><div class="pref-label">Voice Language</div><div class="pref-sub">Default voice command language</div></div>
+      <select style="border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;background:var(--surface);color:var(--text);font-family:var(--font-body);" onchange="voice.setLanguage(this.value)">
+        <option value="en-IN">English (India)</option>
+        <option value="hi-IN">हिंदी</option>
+      </select>
+    </div>
+    <div class="pref-item">
+      <div><div class="pref-label">Auto-read Steps</div><div class="pref-sub">Automatically read each step aloud</div></div>
+      <button class="toggle on" id="autoReadToggle" onclick="this.classList.toggle('on')"></button>
+    </div>
+    <div class="pref-item">
+      <div><div class="pref-label">Timer Alerts</div><div class="pref-sub">Voice alerts when timers complete</div></div>
+      <button class="toggle on" id="timerToggle" onclick="this.classList.toggle('on')"></button>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div id="tab-history" style="display:none;">
+    <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:20px;">Cooking History</h3>
+    <div style="text-align:center;padding:60px 0;color:var(--text3);">
+      <div style="font-size:3rem;margin-bottom:16px;">🍳</div>
+      <p>No cooking sessions yet.<br>Start cooking to track your history!</p>
+      <a href="recipes.html" class="btn btn-primary" style="margin-top:24px;">Browse Recipes</a>
+    </div>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:32px;background:var(--surface);border-top:1px solid var(--border);">
+  <span style="color:var(--text3);font-size:0.85rem;">Made with ❤️ for Indian Food Lovers &nbsp;|&nbsp; </span>
+  <span style="font-weight:700;color:var(--primary);font-size:0.85rem;">Developed by Akanksha Bursu</span>
+</footer>
+
+<script src="js/recipes.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/voice.js"></script>
+<script>
+  function showTab(tab, el) {
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = 'block';
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Load favorites
+  const favIds = getFavorites();
+  const favGrid = document.getElementById('favGrid');
+  if (favIds.length) {
+    favGrid.innerHTML = '';
+    favIds.forEach(id => {
+      const r = getRecipe(id);
+      if (!r) return;
+      const card = document.createElement('a');
+      card.href = `recipe-detail.html?id=${r.id}`;
+      card.className = 'recipe-card';
+      card.innerHTML = `
+        <div class="recipe-thumb" style="background:linear-gradient(135deg,hsl(${r.id*37},70%,50%),hsl(${r.id*37+40},80%,65%));">
+          <span style="font-size:3rem;position:relative;z-index:1;">${r.emoji}</span>
+        </div>
+        <div class="recipe-info">
+          <div class="recipe-tags"><span class="tag">${r.cuisine}</span></div>
+          <div class="recipe-card-title">${r.name}</div>
+          <div class="recipe-meta"><span class="recipe-rating">⭐ ${r.rating}</span><span>⏱ ${r.time}</span></div>
+        </div>`;
+      favGrid.appendChild(card);
+    });
+  }
+
+  // Dark toggle init
+  const darkToggle = document.getElementById('darkToggle');
+  if (localStorage.getItem('theme') === 'dark') darkToggle.classList.add('on');
+
+  function toggleDark(btn) {
+    btn.classList.toggle('on');
+    if (btn.classList.contains('on')) { document.body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); }
+    else { document.body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); }
+  }
+
+  function toggleTheme() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); }
+    else { document.body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); }
+  }
+</script>
+</body>
+</html>

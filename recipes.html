@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipes – TalkToTaste</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .recipes-page { padding: 100px 40px 80px; max-width: 1200px; margin: 0 auto; }
+    .search-bar {
+      display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1; min-width: 240px; padding: 14px 20px;
+      border: 1.5px solid var(--border); border-radius: 100px;
+      background: var(--surface); color: var(--text);
+      font-family: var(--font-body); font-size: 1rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--primary); }
+    .filter-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .filter-chip {
+      padding: 8px 20px; border-radius: 100px; font-size: 0.85rem; font-weight: 600;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--text2); cursor: pointer; transition: all 0.2s;
+    }
+    .filter-chip.active, .filter-chip:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .results-count { font-size: 0.9rem; color: var(--text3); margin-bottom: 24px; }
+    @media (max-width: 600px) { .recipes-page { padding: 90px 20px 60px; } }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand"><div class="logo-icon">🍲</div> TalkToTaste</a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html" style="color:var(--primary);">Recipes</a></li>
+    <li><a href="index.html#features">Features</a></li>
+  </ul>
+  <div class="navbar-actions">
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    <a href="profile.html" class="btn btn-outline">Profile</a>
+  </div>
+</nav>
+
+<div class="recipes-page">
+  <span class="section-tag">Recipe Collection</span>
+  <h1 class="section-title" style="margin-bottom:8px;">Discover 90+ Authentic<br>Indian Recipes 🍛</h1>
+  <p style="color:var(--text2);margin-bottom:36px;">Search by name, ingredient, or cuisine. Use voice commands too!</p>
+
+  <div class="search-bar">
+    <input class="search-input" id="searchInput" placeholder="Search recipes... (e.g. Paneer, Dal, Rice)" oninput="filterRecipes()" />
+    <button class="btn btn-primary" onclick="voice.toggle()">🎙️ Voice Search</button>
+  </div>
+
+  <div class="filter-chips">
+    <span class="filter-chip active" onclick="setFilter('all',this)">All</span>
+    <span class="filter-chip" onclick="setFilter('North Indian',this)">North Indian</span>
+    <span class="filter-chip" onclick="setFilter('Punjabi',this)">Punjabi</span>
+    <span class="filter-chip" onclick="setFilter('South Indian',this)">South Indian</span>
+    <span class="filter-chip" onclick="setFilter('Desserts',this)">Desserts</span>
+    <span class="filter-chip" onclick="setFilter('Easy',this)">Easy</span>
+    <span class="filter-chip" onclick="setFilter('Medium',this)">Medium</span>
+  </div>
+
+  <div class="results-count" id="resultsCount">Showing 6 recipes</div>
+  <div class="recipes-grid" id="recipesGrid"></div>
+</div>
+
+<footer style="text-align:center;padding:32px;background:var(--surface);border-top:1px solid var(--border);">
+  <span style="color:var(--text3);font-size:0.85rem;">Made with ❤️ for Indian Food Lovers &nbsp;|&nbsp; </span>
+  <span style="font-weight:700;color:var(--primary);font-size:0.85rem;">Developed by Akanksha Bursu</span>
+</footer>
+
+<div class="voice-indicator">
+  <button class="mic-btn" id="micBtn" onclick="voice.toggle()">🎙️</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/recipes.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/voice.js"></script>
+<script>
+  let activeFilter = 'all';
+
+  function renderRecipes(list) {
+    const grid = document.getElementById('recipesGrid');
+    document.getElementById('resultsCount').textContent = `Showing ${list.length} recipe${list.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+    if (!list.length) {
+      grid.innerHTML = '<p style="color:var(--text3);grid-column:1/-1;text-align:center;padding:60px 0;">No recipes found. Try a different search.</p>';
+      return;
+    }
+    list.forEach(r => {
+      const card = document.createElement('a');
+      card.href = `recipe-detail.html?id=${r.id}`;
+      card.className = 'recipe-card';
+      card.innerHTML = `
+        <div class="recipe-thumb" style="background:linear-gradient(135deg,hsl(${r.id*37},70%,50%),hsl(${r.id*37+40},80%,65%));">
+          <span style="font-size:3.5rem;position:relative;z-index:1;">${r.emoji}</span>
+        </div>
+        <div class="recipe-info">
+          <div class="recipe-tags">
+            <span class="tag">${r.cuisine}</span>
+            <span class="tag">${r.difficulty}</span>
+          </div>
+          <div class="recipe-card-title">${r.name}</div>
+          <p style="font-size:0.83rem;color:var(--text3);margin-bottom:10px;line-height:1.5;">${r.description.substring(0,80)}...</p>
+          <div class="recipe-meta">
+            <span class="recipe-rating">⭐ ${r.rating}</span>
+            <span>⏱ ${r.time}</span>
+            <span>👥 ${r.servings}</span>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function filterRecipes() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let list = RECIPES;
+    if (activeFilter !== 'all') {
+      list = list.filter(r => r.cuisine === activeFilter || r.difficulty === activeFilter);
+    }
+    if (q) list = list.filter(r => r.name.toLowerCase().includes(q) || r.cuisine.toLowerCase().includes(q) || r.ingredients.some(i => i.toLowerCase().includes(q)));
+    renderRecipes(list);
+  }
+
+  function setFilter(f, el) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    filterRecipes();
+  }
+
+  // Check URL params
+  const params = new URLSearchParams(location.search);
+  if (params.get('cuisine')) {
+    const c = params.get('cuisine').replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    activeFilter = c;
+  }
+
+  renderRecipes(RECIPES);
+
+  const micBtn = document.getElementById('micBtn');
+  voice.onStatusChange = (l) => { micBtn.classList.toggle('listening', l); micBtn.textContent = l ? '⏹️' : '🎙️'; };
+  voice.onCommand = (text) => {
+    document.getElementById('searchInput').value = text;
+    filterRecipes();
+  };
+
+  function toggleTheme() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); }
+    else { document.body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); }
+  }
+</script>
+</body>
+</html>

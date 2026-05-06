@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign In – TalkToTaste</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 48px 40px; width: 100%; max-width: 420px; box-shadow: 0 24px 80px var(--shadow); }
+    .login-logo { text-align: center; margin-bottom: 32px; }
+    .login-logo .logo-icon { width: 56px; height: 56px; background: var(--primary); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 12px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .form-group input {
+      width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); background: var(--bg); color: var(--text);
+      font-family: var(--font-body); font-size: 1rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--primary); }
+    .divider { text-align: center; color: var(--text3); font-size: 0.85rem; margin: 20px 0; }
+    @media (max-width: 480px) { .login-card { padding: 36px 24px; } }
+  </style>
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">🍲</div>
+      <h1 style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--text);">TalkToTaste</h1>
+      <p style="color:var(--text3);font-size:0.9rem;margin-top:4px;">Sign in to your kitchen assistant</p>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="you@example.com" id="emailInput" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="••••••••" id="passInput" />
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:1rem;margin-top:8px;" onclick="doLogin()">Sign In</button>
+    <div class="divider">or</div>
+    <button class="btn btn-outline" style="width:100%;justify-content:center;padding:14px;" onclick="doGuest()">Continue as Guest</button>
+    <p style="text-align:center;margin-top:24px;color:var(--text3);font-size:0.85rem;">
+      Don't have an account? <a href="#" style="color:var(--primary);font-weight:700;">Sign Up</a>
+    </p>
+  </div>
+</div>
+<script src="js/timer.js"></script>
+<script>
+  function doLogin() {
+    const e = document.getElementById('emailInput').value;
+    if (!e) { alert('Please enter your email'); return; }
+    window.location.href = 'profile.html';
+  }
+  function doGuest() { window.location.href = 'index.html'; }
+</script>
+</body>
+</html>

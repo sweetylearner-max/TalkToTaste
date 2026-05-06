@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cook – TalkToTaste</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .detail-page { padding: 100px 40px 80px; max-width: 1100px; margin: 0 auto; }
+    .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 60px; align-items: start; }
+    @media (max-width: 800px) { .recipe-header { grid-template-columns: 1fr; } .detail-page { padding: 90px 20px 60px; } }
+    .recipe-hero-img {
+      height: 340px; border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center; font-size: 8rem;
+    }
+    .meta-pills { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+    .meta-pill { background: var(--bg2); border: 1px solid var(--border); border-radius: 100px; padding: 6px 16px; font-size: 0.85rem; color: var(--text2); font-weight: 500; }
+    .ingredients-list { list-style: none; }
+    .ingredients-list li { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text2); display: flex; align-items: center; gap: 10px; }
+    .ingredients-list li::before { content: '•'; color: var(--primary); font-size: 1.2rem; }
+    /* COOKING MODE */
+    .cooking-mode {
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      position: sticky;
+      top: 100px;
+    }
+    .cooking-mode.inactive { border-color: var(--border); }
+    .mode-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .mode-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+    .start-btn {
+      background: var(--primary); color: white; border: none;
+      padding: 12px 28px; border-radius: 100px; cursor: pointer;
+      font-family: var(--font-body); font-weight: 700; font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .start-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .step-display { margin-bottom: 20px; }
+    .step-num-badge { background: var(--primary); color: white; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 100px; display: inline-block; margin-bottom: 12px; }
+    .step-content { font-size: 1rem; color: var(--text); line-height: 1.75; background: var(--bg2); border-radius: var(--radius-sm); padding: 16px; }
+    .step-controls { display: flex; gap: 12px; margin-top: 20px; }
+    .ctrl-btn {
+      flex: 1; padding: 12px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); background: var(--surface2);
+      color: var(--text2); font-family: var(--font-body); font-weight: 600;
+      cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+    }
+    .ctrl-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .ctrl-btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
+    .ctrl-btn.primary:hover { background: var(--primary-dark); }
+    .timer-display { background: var(--bg2); border-radius: var(--radius-sm); padding: 16px; margin-top: 16px; text-align: center; display: none; }
+    .timer-time { font-family: var(--font-display); font-size: 2rem; font-weight: 900; color: var(--primary); }
+    .whistle-box { background: var(--bg2); border-radius: var(--radius-sm); padding: 16px; margin-top: 16px; text-align: center; display: none; }
+    .whistle-count { font-family: var(--font-display); font-size: 2rem; font-weight: 900; color: var(--accent2); }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 16px; }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.4s ease; }
+    .voice-status { display: flex; align-items: center; gap: 8px; font-size: 0.83rem; color: var(--text3); margin-top: 16px; }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand"><div class="logo-icon">🍲</div> TalkToTaste</a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html">Recipes</a></li>
+  </ul>
+  <div class="navbar-actions">
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    <a href="profile.html" class="btn btn-outline">Profile</a>
+  </div>
+</nav>
+
+<div class="detail-page">
+  <a href="recipes.html" style="color:var(--text3);font-size:0.9rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;">← Back to Recipes</a>
+
+  <div class="recipe-header" id="recipeHeader">
+    <div>
+      <div class="recipe-hero-img" id="recipeThumb"></div>
+    </div>
+    <div>
+      <div id="recipeTags" class="recipe-tags" style="margin-bottom:12px;"></div>
+      <h1 id="recipeName" class="section-title" style="margin-bottom:8px;"></h1>
+      <div class="recipe-rating" id="recipeRating" style="font-size:1.1rem;margin-bottom:12px;"></div>
+      <p id="recipeDesc" style="color:var(--text2);line-height:1.7;margin-bottom:20px;"></p>
+      <div class="meta-pills" id="recipeMeta"></div>
+      <button class="btn btn-primary" style="margin-top:16px;" onclick="startCooking()">▶ Start Cooking Mode</button>
+      <button class="btn btn-outline" style="margin-top:16px;margin-left:12px;" onclick="toggleFav()">
+        <span id="favIcon">🤍</span> Favorite
+      </button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;" id="mainGrid">
+    <!-- Ingredients -->
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;margin-bottom:20px;">📝 Ingredients</h2>
+      <ul class="ingredients-list" id="ingredientsList"></ul>
+
+      <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;margin:40px 0 20px;">👨‍🍳 Steps</h2>
+      <div id="stepsList"></div>
+    </div>
+
+    <!-- Cooking Mode Panel -->
+    <div class="cooking-mode inactive" id="cookingPanel">
+      <div class="mode-header">
+        <span class="mode-title">🍳 Cooking Mode</span>
+        <button class="start-btn" id="startBtn" onclick="startCooking()">Start</button>
+      </div>
+      <div id="progressContainer" style="display:none;">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="step-display">
+          <div class="step-num-badge" id="stepBadge">Step 1</div>
+          <div class="step-content" id="stepContent">Press Start to begin cooking!</div>
+        </div>
+        <div class="step-controls">
+          <button class="ctrl-btn" onclick="prevStep()">← Prev</button>
+          <button class="ctrl-btn" onclick="repeatStep()">🔁</button>
+          <button class="ctrl-btn primary" onclick="nextStep()">Next →</button>
+        </div>
+        <div class="timer-display" id="timerDisplay">
+          <div style="font-size:0.8rem;color:var(--text3);margin-bottom:4px;">⏱️ Timer</div>
+          <div class="timer-time" id="timerTime">0:00</div>
+        </div>
+        <div class="whistle-box" id="whistleBox">
+          <div style="font-size:0.8rem;color:var(--text3);margin-bottom:4px;">🫧 Whistles</div>
+          <div class="whistle-count" id="whistleCount">0 / 0</div>
+          <button class="ctrl-btn" style="margin-top:8px;font-size:0.8rem;" onclick="addWhistle()">+ Add Whistle</button>
+        </div>
+        <div class="voice-status">
+          <div class="pulse-dot" id="voiceDot" style="opacity:0.3;"></div>
+          <span id="voiceStatus">Click mic to use voice control</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:32px;background:var(--surface);border-top:1px solid var(--border);margin-top:60px;">
+  <span style="color:var(--text3);font-size:0.85rem;">Made with ❤️ for Indian Food Lovers &nbsp;|&nbsp; </span>
+  <span style="font-weight:700;color:var(--primary);font-size:0.85rem;">Developed by Akanksha Bursu</span>
+</footer>
+
+<div class="voice-indicator">
+  <button class="mic-btn" id="micBtn" onclick="voice.toggle()">🎙️</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/recipes.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/voice.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const recipe = getRecipe(params.get('id') || 1);
+  let currentStep = 0;
+  let cookingActive = false;
+  let currentTimerId = null;
+
+  if (!recipe) { location.href = 'recipes.html'; }
+
+  // Render recipe
+  document.title = recipe.name + ' – TalkToTaste';
+  const thumb = document.getElementById('recipeThumb');
+  thumb.style.background = `linear-gradient(135deg,hsl(${recipe.id*37},70%,50%),hsl(${recipe.id*37+40},80%,65%))`;
+  thumb.innerHTML = `<span>${recipe.emoji}</span>`;
+
+  document.getElementById('recipeTags').innerHTML = `<span class="tag">${recipe.cuisine}</span><span class="tag">${recipe.difficulty}</span>`;
+  document.getElementById('recipeName').textContent = recipe.name;
+  document.getElementById('recipeRating').innerHTML = `⭐ ${recipe.rating} rating`;
+  document.getElementById('recipeDesc').textContent = recipe.description;
+  document.getElementById('recipeMeta').innerHTML = `
+    <span class="meta-pill">⏱ ${recipe.time}</span>
+    <span class="meta-pill">👥 ${recipe.servings} Servings</span>
+    <span class="meta-pill">📊 ${recipe.difficulty}</span>`;
+
+  const ingList = document.getElementById('ingredientsList');
+  recipe.ingredients.forEach(ing => {
+    const li = document.createElement('li');
+    li.textContent = ing;
+    ingList.appendChild(li);
+  });
+
+  const stList = document.getElementById('stepsList');
+  recipe.steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.id = `step-${i}`;
+    div.style.cssText = 'display:flex;gap:16px;margin-bottom:20px;padding:16px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);transition:all 0.3s;';
+    div.innerHTML = `
+      <div style="min-width:36px;height:36px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;color:var(--primary);">${i+1}</div>
+      <p style="color:var(--text2);line-height:1.7;font-size:0.95rem;margin:0;padding-top:6px;">${step}</p>`;
+    stList.appendChild(div);
+  });
+
+  // Favorites
+  function toggleFav() {
+    const added = toggleFavorite(recipe.id);
+    document.getElementById('favIcon').textContent = added ? '❤️' : '🤍';
+    showToast(added ? '❤️ Added to favorites!' : '💔 Removed from favorites');
+  }
+  document.getElementById('favIcon').textContent = isFavorite(recipe.id) ? '❤️' : '🤍';
+
+  // Cooking mode
+  function startCooking() {
+    cookingActive = true;
+    currentStep = 0;
+    document.getElementById('cookingPanel').classList.remove('inactive');
+    document.getElementById('startBtn').style.display = 'none';
+    document.getElementById('progressContainer').style.display = 'block';
+    updateStep();
+    showToast('🎙️ Say "next step" to navigate!');
+    voice.start();
+  }
+
+  function updateStep() {
+    const step = recipe.steps[currentStep];
+    const total = recipe.steps.length;
+    document.getElementById('stepBadge').textContent = `Step ${currentStep+1} of ${total}`;
+    document.getElementById('stepContent').textContent = step;
+    document.getElementById('progressFill').style.width = `${((currentStep+1)/total)*100}%`;
+
+    // Highlight in list
+    document.querySelectorAll('[id^="step-"]').forEach((el, i) => {
+      el.style.borderColor = i === currentStep ? 'var(--primary)' : 'var(--border)';
+      el.style.background = i === currentStep ? 'var(--bg2)' : 'var(--surface)';
+    });
+
+    // Timer
+    const timerSeconds = recipe.timers[currentStep];
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (currentTimerId) { timerManager.cancel(currentTimerId); currentTimerId = null; }
+    if (timerSeconds) {
+      timerDisplay.style.display = 'block';
+      document.getElementById('timerTime').textContent = timerManager.formatTime(timerSeconds);
+      currentTimerId = timerManager.start(timerSeconds, `Step ${currentStep+1}`, () => {
+        timerDisplay.style.display = 'none';
+        voice.speak(`Step ${currentStep+1} timer complete. You can proceed to the next step.`);
+      });
+      timerManager.setTickHandler(currentTimerId, (remaining) => {
+        document.getElementById('timerTime').textContent = timerManager.formatTime(remaining);
+      });
+    } else {
+      timerDisplay.style.display = 'none';
+    }
+
+    voice.speak(`Step ${currentStep+1}. ${step}`);
+  }
+
+  function nextStep() {
+    if (currentStep < recipe.steps.length - 1) { currentStep++; updateStep(); }
+    else { showToast('🎉 Cooking complete! Enjoy your meal!'); voice.speak('Congratulations! Your dish is ready. Enjoy your meal!'); }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) { currentStep--; updateStep(); }
+  }
+
+  function repeatStep() {
+    voice.speak(recipe.steps[currentStep]);
+  }
+
+  function addWhistle() {
+    document.getElementById('whistleBox').style.display = 'block';
+    const count = whistleTracker.addWhistle();
+    document.getElementById('whistleCount').textContent = `${count} / ${whistleTracker.target || '?'}`;
+  }
+
+  // Voice commands for cooking
+  const micBtn = document.getElementById('micBtn');
+  voice.onStatusChange = (l) => {
+    micBtn.classList.toggle('listening', l);
+    micBtn.textContent = l ? '⏹️' : '🎙️';
+    document.getElementById('voiceDot').style.opacity = l ? '1' : '0.3';
+    document.getElementById('voiceStatus').textContent = l ? 'Listening...' : 'Click mic to use voice control';
+  };
+
+  voice.onCommand = (text) => {
+    if (!cookingActive) return;
+    if (text.includes('next') || text.includes('अगला')) nextStep();
+    else if (text.includes('prev') || text.includes('back') || text.includes('पिछला')) prevStep();
+    else if (text.includes('repeat') || text.includes('again') || text.includes('वापस') || text.includes('दोबारा')) repeatStep();
+    else if (text.includes('whistle') || text.includes('सीटी')) addWhistle();
+    else showToast(`🎙️ "${text}"`);
+  };
+
+  function toggleTheme() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); }
+    else { document.body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); }
+  }
+
+  // Responsive: hide panel on mobile
+  if (window.innerWidth < 800) {
+    document.getElementById('mainGrid').style.gridTemplateColumns = '1fr';
+  }
+</script>
+</body>
+</html>

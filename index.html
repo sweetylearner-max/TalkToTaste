@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="description" content="Your AI-powered voice-first smart kitchen assistant for authentic Indian cooking. Cook hands-free with step-by-step voice guidance in Hindi and English." />
+  <meta name="keywords" content="cooking assistant, voice cooking, Indian recipes, hands-free cooking, AI kitchen, Hindi recipes" />
+  <title>TalkToTaste – Voice Controlled Cooking Assistant</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .hero-section {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 100px 60px 60px;
+      max-width: 1300px;
+      margin: 0 auto;
+      gap: 60px;
+    }
+    @media (max-width: 900px) {
+      .hero-section { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+      .hero-right { display: none; }
+    }
+    .section-center { text-align: center; }
+    .section-center .section-subtitle { margin: 0 auto; }
+    .voice-demo-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 700px;
+      margin: 40px auto 0;
+    }
+    .voice-demo-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .cmd-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .cmd-item {
+      background: var(--bg2);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 0.85rem;
+    }
+    .cmd-item .en { color: var(--text); font-weight: 600; }
+    .cmd-item .hi { color: var(--text3); font-size: 0.8rem; margin-top: 2px; }
+    @media (max-width: 500px) { .cmd-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <div class="logo-icon">🍲</div>
+    TalkToTaste
+  </a>
+  <ul class="navbar-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="recipes.html">Recipes</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#voice-demo">Voice Guide</a></li>
+  </ul>
+  <div class="navbar-actions">
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+    <a href="profile.html" class="btn btn-outline">Profile</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-section">
+  <div class="hero-left">
+    <div class="hero-badge">🎙️ Voice-First Cooking</div>
+    <h1 style="font-family:var(--font-display);font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:900;line-height:1.15;margin-bottom:20px;animation:fadeInUp 0.6s ease both;">
+      Cooking made <span style="color:var(--primary)">hands-free</span>
+    </h1>
+    <p style="font-size:1.1rem;color:var(--text2);margin-bottom:36px;line-height:1.7;animation:fadeInUp 0.6s ease 0.1s both;">
+      Experience the magic of voice-controlled cooking. Navigate recipes, set timers, and track pressure cooker whistles — without touching your device.
+    </p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;animation:fadeInUp 0.6s ease 0.2s both;">
+      <a href="recipes.html" class="btn btn-primary" style="font-size:1rem;padding:14px 32px;">Start Cooking 🍳</a>
+      <a href="#features" class="btn btn-outline" style="font-size:1rem;padding:14px 32px;">Explore Features</a>
+    </div>
+    <div class="hero-stats" style="margin-top:48px;animation:fadeInUp 0.6s ease 0.3s both;">
+      <div class="stat"><span class="stat-num">90+</span><span class="stat-label">Indian Recipes</span></div>
+      <div class="stat"><span class="stat-num">2</span><span class="stat-label">Languages</span></div>
+      <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Voice Support</span></div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- Live Demo Card -->
+    <div class="cooking-card" style="animation:fadeInUp 0.7s ease 0.3s both;">
+      <div class="card-header">
+        <span class="card-title">Now Cooking</span>
+        <span class="status-badge">● Active</span>
+      </div>
+      <div class="recipe-name">🧀 Paneer Butter Masala</div>
+      <div class="step-info">Step 3 of 9</div>
+      <div class="step-text">
+        "Add ginger-garlic paste and cook for 2 minutes until the raw smell disappears..."
+      </div>
+      <div class="voice-hint">
+        <div class="pulse-dot"></div>
+        Say "Next step" to continue
+      </div>
+      <div class="ingredient-chips">
+        <span class="chip">🧈 Butter</span>
+        <span class="chip">🌶️ Chili</span>
+        <span class="chip">⏱️ 2 min</span>
+        <span class="chip">🧄 Garlic</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features" style="background:var(--bg2);padding:80px 0;">
+  <div class="section">
+    <div class="section-center">
+      <span class="section-tag">Why Talk to Taste?</span>
+      <h2 class="section-title">Everything You Need for<br>Hands-Free Cooking</h2>
+      <p class="section-subtitle">Experience a revolutionary way to cook with voice-controlled features designed for the modern Indian kitchen.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <div class="feature-title">Voice Control</div>
+        <p class="feature-desc">Navigate and cook completely hands-free using intuitive voice commands in Hindi or English.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <div class="feature-title">Smart Timers</div>
+        <p class="feature-desc">Set and manage multiple cooking timers with voice. Get notified when your dish is ready.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🫧</div>
+        <div class="feature-title">Whistle Tracking</div>
+        <p class="feature-desc">Track pressure cooker whistles automatically for perfect cooking every time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Bilingual Support</div>
+        <p class="feature-desc">Cook in your preferred language. Full support for Hindi and English voice commands.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🍛</div>
+        <div class="feature-title">90+ Recipes</div>
+        <p class="feature-desc">Explore authentic Indian recipes with detailed step-by-step voice-guided instructions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">♿</div>
+        <div class="feature-title">Accessible Design</div>
+        <p class="feature-desc">Designed for everyone — elderly, beginners, and visually impaired users.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <div class="feature-title">Smart Reminders</div>
+        <p class="feature-desc">Never miss a step with intelligent voice reminders and cooking notifications.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">❤️</div>
+        <div class="feature-title">Save Favorites</div>
+        <p class="feature-desc">Build your personal cookbook with favorite recipes and cooking history.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECIPE PREVIEW -->
+<section style="padding:80px 0;">
+  <div class="section">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:48px;">
+      <div>
+        <span class="section-tag">Recipe Collection</span>
+        <h2 class="section-title">Discover 90+ Authentic<br>Indian Recipes</h2>
+      </div>
+      <a href="recipes.html" class="btn btn-primary">View All Recipes →</a>
+    </div>
+    <div class="recipes-grid" id="recipeGrid"></div>
+  </div>
+</section>
+
+<!-- VOICE COMMANDS -->
+<section id="voice-demo" style="background:var(--bg2);padding:80px 0;">
+  <div class="section">
+    <div class="section-center">
+      <span class="section-tag">Voice Command Guide</span>
+      <h2 class="section-title">Cook Smart. Speak Easy.</h2>
+      <p class="section-subtitle">Effortlessly control your cooking journey using these intuitive English or Hindi commands.</p>
+    </div>
+    <div class="voice-demo-box">
+      <h3>🎙️ Cooking Controls</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><div class="en">Start cooking</div><div class="hi">पकाना शुरू करो</div></div>
+        <div class="cmd-item"><div class="en">Next step</div><div class="hi">अगला स्टेप</div></div>
+        <div class="cmd-item"><div class="en">Previous step</div><div class="hi">पिछला स्टेप</div></div>
+        <div class="cmd-item"><div class="en">Repeat step</div><div class="hi">वापस / दोबारा</div></div>
+        <div class="cmd-item"><div class="en">Set timer for 5 minutes</div><div class="hi">5 मिनट का टाइमर</div></div>
+        <div class="cmd-item"><div class="en">Add 1 whistle</div><div class="hi">एक सीटी हो गई</div></div>
+        <div class="cmd-item"><div class="en">Stop / Pause</div><div class="hi">रुको / बस करो</div></div>
+        <div class="cmd-item"><div class="en">Switch to Dark Mode</div><div class="hi">डार्क मोड लगाओ</div></div>
+      </div>
+    </div>
+    <div class="voice-demo-box" style="margin-top:20px;">
+      <h3>🧭 Navigation Commands</h3>
+      <div class="cmd-grid">
+        <div class="cmd-item"><div class="en">Go to Home</div><div class="hi">मुख्य पृष्ठ</div></div>
+        <div class="cmd-item"><div class="en">Show Recipes</div><div class="hi">रेसिपी दिखाओ</div></div>
+        <div class="cmd-item"><div class="en">Open Profile</div><div class="hi">प्रोफाइल दिखाओ</div></div>
+        <div class="cmd-item"><div class="en">Speak in Hindi</div><div class="hi">हिंदी में बोलो</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" style="padding:80px 0;">
+  <div class="section">
+    <div class="section-center">
+      <span class="section-tag">Simple Process</span>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Get started with TalkToTaste in four simple steps</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-title">Find Your Recipe</div>
+        <p class="step-desc">Search from 90+ authentic Indian recipes by name, ingredients, or cuisine type.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-title">Start Voice Mode</div>
+        <p class="step-desc">Activate voice control and let TalkToTaste guide you through each step hands-free.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-title">Cook Along</div>
+        <p class="step-desc">Follow voice instructions, set timers, and track pressure cooker whistles — all by voice.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-title">Save & Share</div>
+        <p class="step-desc">Save your favorite recipes and share your cooking journey with friends and family.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="navbar-brand" style="font-size:1.3rem;">
+        <div class="logo-icon">🍲</div> TalkToTaste
+      </div>
+      <p>Your AI-powered voice-first smart kitchen assistant for authentic Indian cooking. Cook hands-free, cook with confidence.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="recipes.html">Recipes</a></li>
+        <li><a href="#voice-demo">Voice Demo</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Cuisines</h4>
+      <ul>
+        <li><a href="recipes.html?cuisine=north-indian">North Indian</a></li>
+        <li><a href="recipes.html?cuisine=south-indian">South Indian</a></li>
+        <li><a href="recipes.html?cuisine=punjabi">Punjabi</a></li>
+        <li><a href="recipes.html?cuisine=desserts">Desserts</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <ul>
+        <li><a href="profile.html">My Profile</a></li>
+        <li><a href="profile.html">Favorites</a></li>
+        <li><a href="login.html">Sign In</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Made with ❤️ for Indian Food Lovers</span>
+    <span style="font-weight:600;color:var(--primary);">Developed by Akanksha Bursu</span>
+  </div>
+</footer>
+
+<!-- Voice FAB -->
+<div class="voice-indicator">
+  <button class="mic-btn" id="micBtn" onclick="voice.toggle()" title="Start voice control">🎙️</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/recipes.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/voice.js"></script>
+<script>
+  // Render preview recipes
+  const grid = document.getElementById('recipeGrid');
+  RECIPES.slice(0, 6).forEach(r => {
+    const card = document.createElement('a');
+    card.href = `recipe-detail.html?id=${r.id}`;
+    card.className = 'recipe-card';
+    card.innerHTML = `
+      <div class="recipe-thumb" style="background:linear-gradient(135deg,hsl(${r.id*37},70%,50%),hsl(${r.id*37+40},80%,65%));">
+        <span style="font-size:3.5rem;position:relative;z-index:1;">${r.emoji}</span>
+      </div>
+      <div class="recipe-info">
+        <div class="recipe-tags">
+          <span class="tag">${r.cuisine}</span>
+          <span class="tag">${r.difficulty}</span>
+        </div>
+        <div class="recipe-card-title">${r.name}</div>
+        <div class="recipe-meta">
+          <span class="recipe-rating">⭐ ${r.rating}</span>
+          <span>⏱ ${r.time}</span>
+          <span>👥 ${r.servings}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  // Voice status
+  const micBtn = document.getElementById('micBtn');
+  voice.onStatusChange = (listening) => {
+    micBtn.classList.toggle('listening', listening);
+    micBtn.textContent = listening ? '⏹️' : '🎙️';
+  };
+  voice.onCommand = (text) => {
+    showToast(`🎙️ "${text}"`);
+  };
+
+  // Theme toggle
+  function toggleTheme() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    if (isDark) { document.body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); }
+    else { document.body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); }
+  }
+</script>
+</body>
+</html>
